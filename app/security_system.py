@@ -15,36 +15,51 @@ class SecuritySystem:
         else:
             raise ValueError("Invalid algorithm specified")
 
-        # TODO 1
         # Load the trained face recognition model
+        if model_path is not None:
+            self.face_recognizer.read(model_path)
+        else:
+            raise ValueError("Model path not provided")
 
         # Specify the path to the custom Haar Cascade classifier
+        self.cascade_path = cascade_path
 
         # Load authorized persons from CSV
-        
+        self.authorized_persons = self.load_authorized_persons()
+
         # Load label-to-name mapping from CSV
-        
-        # TODO 2
+        self.label_to_name = self.load_label_to_name(algorithm)
+
+        # TODO 2 (Part 1)
         # Configure logging
         # Logs are to be made to the access_logs.log file
         # Set the logging level to INFO
         # Use the following format: '%(asctime)s - %(message)s'
-        # Your code goes here
+        self.configure_logging()
+
+    def configure_logging(self):
+        logging.basicConfig(filename='access_logs.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
     def load_authorized_persons(self):
         authorized_persons = {}
-        # TODO 1
         # Load authorized persons from CSV
-        # Your code goes here
-
+        # Assuming CSV file format: ID,Name,Authorized
+        with open('authorized_persons.csv', mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                id, name, authorized = row
+                authorized_persons[name] = bool(int(authorized))
         return authorized_persons
     
     def load_label_to_name(self, algorithm):
         label_to_name = {}
-        # TODO 1
         # Load label-to-name mapping from CSV
-        # Your code goes here
-
+        # Assuming CSV file format: Label,Name
+        with open(f'label_to_name_{algorithm}.csv', mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                label, name = row
+                label_to_name[int(label)] = name
         return label_to_name
 
     def recognize_face(self, frame):
@@ -69,19 +84,20 @@ class SecuritySystem:
         # TODO 1
         # Return the name of the person based on the label
         # If the confidence is less than 80, return 'Unknown'
-        # Your code goes here
-        pass
-
+        if confidence < 80:
+            return 'Unknown'
+        return self.label_to_name.get(label, 'Unknown')
 
     def is_person_authorized(self, person_name):
         return self.authorized_persons.get(person_name, False)
 
     def log_access_attempt(self, person_name, is_authorized):
-        # TODO 2
+        # TODO 2 (Part 2)
         # Log access attempt in the access_logs.log file
         # Logs should be in the following format:
         # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
-        # Your code goes here
+        log_message = f"Person: {person_name}, Authorized: {is_authorized}"
+        logging.info(log_message)
 
         # If unauthorized access, send a notification (you need to implement this)
         if not is_authorized:
@@ -89,5 +105,4 @@ class SecuritySystem:
 
     def send_firebase_notification(self, person_name):
         # Implement Firebase Cloud Messaging notification
-        # You'll need to set up Firebase and integrate Firebase Cloud Messaging.
         pass
