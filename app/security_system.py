@@ -30,6 +30,13 @@ class SecuritySystem:
         # Set the logging level to INFO
         # Use the following format: '%(asctime)s - %(message)s'
         # Your code goes here
+        
+        logging.basicConfig(
+            filename='access_logs.log',
+            level=logging.INFO,
+            format='%(asctime)s - %(message)s',
+            datefmt='%d-%b-%y %H:%M:%S'
+        )
 
     def load_authorized_persons(self):
         authorized_persons = {}
