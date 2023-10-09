@@ -2,6 +2,7 @@ import cv2
 import os
 import csv
 import logging
+from datetime import datetime
 
 class SecuritySystem:
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
@@ -66,13 +67,37 @@ class SecuritySystem:
 
         # TODO 3
         # Perform face detection
+        faces = face_cascade.detectMultiScale(gray_frame, scaleFactor = 1.2, minNeighbors = 5, minSize = (30,30))
         # Iterate through each detected face
-        # Extract the detected face region
-        # Perform facial recognition on the detected face
-        # Draw bounding box around the detected face
-        # Annotate the frame with the recognized user's name and authorization status
-        # Log access attempt
-        # Your code goes here
+        for face in faces:
+            # Extract the detected face region
+            x,y,w,h = face
+            X,Y = x+w,y+h
+            image = gray_frame[x:X, y:Y]
+            # Perform facial recognition on the detected face
+            label, confidence = self.face_recognizer.predict(image)
+            # Draw bounding box around the detected face
+            l= 20
+            t= 5
+            cv2.rectangle(frame,face,(255,0,200),1)
+            cv2.line(frame,(x,y),(x+l,y),(255,0,200),t)
+            cv2.line(frame,(x,y),(x,y+l),(255,0,200),t)
+            cv2.line(frame,(X-l,y),(X,y),(255,0,200),t)
+            cv2.line(frame,(X,y),(X,y+l),(255,0,200),t)
+            cv2.line(frame,(x,Y-l),(x,Y),(255,0,200),t)
+            cv2.line(frame,(x,Y),(x+l,Y),(255,0,200),t)
+            cv2.line(frame,(X-l,Y),(X,Y),(255,0,200),t)
+            cv2.line(frame,(X,Y-l),(X,Y),(255,0,200),t)
+            # Annotate the frame with the recognized user's name and authorization status
+            name = self.get_person_name(label,confidence)
+            authorization_status = self.authorized_persons[name]
+            cv2.rectangle(frame, [x,y-35,w-50,30], (0,200,100),-1)
+            cv2.putText(frame,f"Name: {name}",(x+5,y-20),cv2.FONT_HERSHEY_PLAIN,0.8,(30,30,30),1)
+            cv2.putText(frame,f"Authorization Status: {authorization_status}",(x+5,y-10),cv2.FONT_HERSHEY_PLAIN,0.8,(0,0,0),1)
+            # Log access attempt
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            logging.info(f"{timestamp} - Person: {name}, Authorized: {authorization_status}") 
+            
         return frame
 
     def get_person_name(self, label, confidence):
