@@ -19,7 +19,7 @@ class SecuritySystem:
         # Load the trained face recognition model
         if(model_path==None):
             self.model_path = "trained_models/trained_face_model_LBPH.xml"
-            self.face_recognizer.read(self.model_path)
+        self.face_recognizer.read(self.model_path)
         # Specify the path to the custom Haar Cascade classifier
         if(cascade_path==None):
             self.cascade_path = "haar_face.xml"
