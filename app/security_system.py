@@ -2,6 +2,7 @@ import cv2
 import os
 import csv
 import logging
+import time
 
 class SecuritySystem:
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
@@ -89,7 +90,10 @@ class SecuritySystem:
         # Logs should be in the following format:
         # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
         # Your code goes here
-
+        
+        timestamp = time.time()
+        logging.info(f'{timestamp} - Person: {person_name}, Authorized: {is_authorized}')
+        
         # If unauthorized access, send a notification (you need to implement this)
         if not is_authorized:
             self.send_firebase_notification(person_name)
