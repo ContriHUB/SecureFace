@@ -95,8 +95,7 @@ class SecuritySystem:
             cv2.putText(frame,f"Name: {name}",(x+5,y-20),cv2.FONT_HERSHEY_PLAIN,0.8,(30,30,30),1)
             cv2.putText(frame,f"Authorization Status: {authorization_status}",(x+5,y-10),cv2.FONT_HERSHEY_PLAIN,0.8,(0,0,0),1)
             # Log access attempt
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            logging.info(f"{timestamp} - Person: {name}, Authorized: {authorization_status}") 
+            self.log_access_attempt(name,authorization_status)
             
         return frame
 
