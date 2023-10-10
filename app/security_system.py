@@ -34,6 +34,12 @@ class SecuritySystem:
         # Set the logging level to INFO
         # Use the following format: '%(asctime)s - %(message)s'
         # Your code goes here
+        
+        logging.basicConfig(
+            filename='app/access_logs.log',
+            level=logging.INFO,
+            format='%(asctime)s - %(message)s'
+        )
 
     def load_authorized_persons(self):
         authorized_persons = {}
@@ -126,6 +132,8 @@ class SecuritySystem:
         # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
         # Your code goes here
 
+        logging.info(f'Person: {person_name}, Authorized: {is_authorized}')
+        
         # If unauthorized access, send a notification (you need to implement this)
         if not is_authorized:
             self.send_firebase_notification(person_name)
