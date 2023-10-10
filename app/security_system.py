@@ -83,13 +83,13 @@ class SecuritySystem:
             # Perform facial recognition on the detected face
             label, confidence = self.face_recognizer.predict(image)
             person_name = self.get_person_name(label,confidence)
-            authorization_status = self.authorized_persons[person_name]
+            authorization_status = self.is_person_authorized(person_name)
             if(authorization_status==True):
                 color = (0,200,100)
-                is_authorized = "YES"
+                is_authorized = "True"
             else:
                 color = (0,35,200)
-                is_authorized = "NO"
+                is_authorized = "False"
             # Draw bounding box around the detected face
             l= 20
             t= 5
@@ -105,7 +105,7 @@ class SecuritySystem:
             cv2.line(frame,(X,Y-l),(X,Y),color,t)
             # Annotate the frame with the recognized user's name and authorization status
            
-            cv2.rectangle(frame, [x,y-35,w-50,30], color,-1)
+            cv2.rectangle(frame, [x,y-35,200,30], color,-1)
             cv2.putText(frame,f"Name: {person_name}",(x+5,y-20),cv2.FONT_HERSHEY_PLAIN,0.8,(30,30,30),1)
             cv2.putText(frame,f"Authorization Status: {authorization_status}",(x+5,y-10),cv2.FONT_HERSHEY_PLAIN,0.8,(0,0,0),1)
             # Log access attempt
