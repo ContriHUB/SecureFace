@@ -73,30 +73,37 @@ class SecuritySystem:
             # Extract the detected face region
             x,y,w,h = face
             X,Y = x+w,y+h
-            image = gray_frame[x:X, y:Y]
+            image = gray_frame[y:Y, x:X]
             # Perform facial recognition on the detected face
             label, confidence = self.face_recognizer.predict(image)
+            person_name = self.get_person_name(label,confidence)
+            authorization_status = self.authorized_persons[person_name]
+            if(authorization_status==True):
+                color = (0,200,100)
+                is_authorized = "YES"
+            else:
+                color = (0,35,200)
+                is_authorized = "NO"
             # Draw bounding box around the detected face
             l= 20
             t= 5
-            cv2.rectangle(frame,face,(255,0,200),1)
-            cv2.line(frame,(x,y),(x+l,y),(255,0,200),t)
-            cv2.line(frame,(x,y),(x,y+l),(255,0,200),t)
-            cv2.line(frame,(X-l,y),(X,y),(255,0,200),t)
-            cv2.line(frame,(X,y),(X,y+l),(255,0,200),t)
-            cv2.line(frame,(x,Y-l),(x,Y),(255,0,200),t)
-            cv2.line(frame,(x,Y),(x+l,Y),(255,0,200),t)
-            cv2.line(frame,(X-l,Y),(X,Y),(255,0,200),t)
-            cv2.line(frame,(X,Y-l),(X,Y),(255,0,200),t)
+            
+            cv2.rectangle(frame,face,color,1)
+            cv2.line(frame,(x,y),(x+l,y),color,t)
+            cv2.line(frame,(x,y),(x,y+l),color,t)
+            cv2.line(frame,(X-l,y),(X,y),color,t)
+            cv2.line(frame,(X,y),(X,y+l),color,t)
+            cv2.line(frame,(x,Y-l),(x,Y),color,t)
+            cv2.line(frame,(x,Y),(x+l,Y),color,t)
+            cv2.line(frame,(X-l,Y),(X,Y),color,t)
+            cv2.line(frame,(X,Y-l),(X,Y),color,t)
             # Annotate the frame with the recognized user's name and authorization status
-            name = self.get_person_name(label,confidence)
-            authorization_status = self.authorized_persons[name]
-            cv2.rectangle(frame, [x,y-35,w-50,30], (0,200,100),-1)
-            cv2.putText(frame,f"Name: {name}",(x+5,y-20),cv2.FONT_HERSHEY_PLAIN,0.8,(30,30,30),1)
+           
+            cv2.rectangle(frame, [x,y-35,w-50,30], color,-1)
+            cv2.putText(frame,f"Name: {person_name}",(x+5,y-20),cv2.FONT_HERSHEY_PLAIN,0.8,(30,30,30),1)
             cv2.putText(frame,f"Authorization Status: {authorization_status}",(x+5,y-10),cv2.FONT_HERSHEY_PLAIN,0.8,(0,0,0),1)
             # Log access attempt
-            self.log_access_attempt(name,authorization_status)
-            
+            self.log_access_attempt(person_name,is_authorized)
         return frame
 
     def get_person_name(self, label, confidence):
