@@ -2,7 +2,6 @@ import cv2
 import os
 import csv
 import logging
-import time
 
 class SecuritySystem:
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
@@ -33,10 +32,9 @@ class SecuritySystem:
         # Your code goes here
         
         logging.basicConfig(
-            filename='access_logs.log',
+            filename='app/access_logs.log',
             level=logging.INFO,
-            format='%(asctime)s - %(message)s',
-            datefmt='%d-%b-%y %H:%M:%S'
+            format='%(asctime)s - %(message)s'
         )
 
     def load_authorized_persons(self):
@@ -91,8 +89,7 @@ class SecuritySystem:
         # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
         # Your code goes here
         
-        timestamp = time.time()
-        logging.info(f'{timestamp} - Person: {person_name}, Authorized: {is_authorized}')
+        logging.info(f'Person: {person_name}, Authorized: {is_authorized}')
         
         # If unauthorized access, send a notification (you need to implement this)
         if not is_authorized:
