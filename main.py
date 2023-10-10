@@ -13,15 +13,39 @@ def load_existing_model(algorithm):
     model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
     return SecuritySystem(algorithm, model_path)
 
+def recognize_face_dummy(frame):
+    # This is a placeholder for the actual face recognition logic
+    # Generate dummy recognized faces for testing
+    # In a real implementation, replace this with your face recognition logic
+    recognized_faces = [(50, 50, 100, 100), (200, 200, 80, 80)]  # Dummy recognized faces
+    return recognized_faces
 def real_time_detection(security_system):
-    # TODO 1
-    # Capture video from a camera (you can adjust the video source)
     
+    cap = cv2.VideoCapture(0)  
+    # Perform face recognition on the frame
+     #Now while the condition is true , we will capture the image
+    while True:
+       
+        ret, frame = cap.read()
+
         # Perform face recognition on the frame
+        recognized_faces = recognize_face_dummy(frame)
+
+       
+        for (x, y, w, h) in recognized_faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  #we will  draw a green rectangle around the face
+
+
+        cv2.imshow('Real-time Face Recognition', frame)
 
         # Press 'q' to quit
+        if cv2.waitKey(0) & 0xFF == ord('q'):
+            break
 
-    # Release the video capture object and close the window
+    # Release the video capture object and close the OpenCV window
+    cap.release()
+    cv2.destroyAllWindows()
+
     pass
 
 def batch_processing(security_system):
@@ -62,6 +86,7 @@ def main():
 
             if sub_choice == '1':
                 real_time_detection(security_system)
+              
             elif sub_choice == '2':
                 batch_processing(security_system)
             elif sub_choice == '3':
