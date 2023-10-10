@@ -17,13 +17,16 @@ class SecuritySystem:
 
         # TODO 1
         # Load the trained face recognition model
-
+        if(model_path==None):
+            self.model_path = "trained_models/trained_face_model_LBPH.xml"
+        self.face_recognizer.read(self.model_path)
         # Specify the path to the custom Haar Cascade classifier
-
+        if(cascade_path==None):
+            self.cascade_path = "haar_face.xml"
         # Load authorized persons from CSV
-        
+        self.authorized_persons = self.load_authorized_persons()
         # Load label-to-name mapping from CSV
-        
+        self.label_to_name = self.load_label_to_name(algorithm)
         # TODO 2
         # Configure logging
         # Logs are to be made to the access_logs.log file
@@ -39,18 +42,25 @@ class SecuritySystem:
 
     def load_authorized_persons(self):
         authorized_persons = {}
-        # TODO 1
-        # Load authorized persons from CSV
-        # Your code goes here
-
+            # TODO 1
+            # Load authorized persons from CSV
+            # Your code goes here
+        with open("authorized_persons.csv") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                authorized_persons[row[0]] = row[1]
+        del authorized_persons["Name"]
         return authorized_persons
     
     def load_label_to_name(self, algorithm):
         label_to_name = {}
-        # TODO 1
-        # Load label-to-name mapping from CSV
-        # Your code goes here
-
+            # TODO 1
+            # Load label-to-name mapping from CSV
+            # Your code goes here
+        with open("label_to_name.csv") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                label_to_name[row[0]] = row[1]
         return label_to_name
 
     def recognize_face(self, frame):
@@ -73,11 +83,13 @@ class SecuritySystem:
 
     def get_person_name(self, label, confidence):
         # TODO 1
-        # Return the name of the person based on the label
-        # If the confidence is less than 80, return 'Unknown'
-        # Your code goes here
-        pass
-
+            # Return the name of the person based on the label
+            # If the confidence is less than 80, return 'Unknown'
+            # Your code goes here
+            if(confidence<80 or (label not in self.label_to_name)):
+                return "Unknown"
+            else:
+                return self.label_to_name[label]
 
     def is_person_authorized(self, person_name):
         return self.authorized_persons.get(person_name, False)
@@ -88,7 +100,7 @@ class SecuritySystem:
         # Logs should be in the following format:
         # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
         # Your code goes here
-        
+
         logging.info(f'Person: {person_name}, Authorized: {is_authorized}')
         
         # If unauthorized access, send a notification (you need to implement this)
