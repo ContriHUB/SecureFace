@@ -11,13 +11,10 @@ def train_new_model():
 face_classifier = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
-
 def load_existing_model(algorithm):
     # Load a pre-trained model based on the specified algorithm
     model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
     return SecuritySystem(algorithm, model_path)
-
-#new
 #recognizing using LBPG algo
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 #extracting informations
@@ -40,9 +37,6 @@ except IOError:
     exit()
     
 def recognize_face_dummy(frame):
- 
-    # recognized_faces = [(50, 50, 100, 100), (200, 200, 80, 80)]  
-    # return recognized_faces
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
     for (x, y, w, h) in faces:
@@ -61,8 +55,7 @@ def recognize_face_dummy(frame):
 def real_time_detection(security_system):
     
     capture_vid = cv2.VideoCapture(0)  
-    # Now perform face recognition on the frame
-    #Now while the condition is true , we will capture the image
+    # Now perform face recognition on the frame and while the condition is true , we will capture the image
     while True:
         ret, frame = capture_vid.read()
         # Perform face recognition on the frame
@@ -72,10 +65,9 @@ def real_time_detection(security_system):
         for (x, y, w, h) in recognized_faces:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  
         cv2.imshow('Real-time Face Recognition', frame)
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-          break
         # Press 'q' to quit
-       
+       if cv2.waitKey(1) & 0xFF == ord("q"):
+          break
 
     # Release the video capture object and close the OpenCV window
     capture_vid.release()
@@ -121,7 +113,6 @@ def main():
 
             if sub_choice == '1':
                 real_time_detection(security_system)
-              
             elif sub_choice == '2':
                 batch_processing(security_system)
             elif sub_choice == '3':
