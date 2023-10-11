@@ -18,14 +18,14 @@ class SecuritySystem:
 
         # TODO 1
         # Load the trained face recognition model
-        if(model_path is None):
+        if(model_path is None or not(os.path.exists(model_path))):
             self.model_path = "app/trained_models/trained_face_model_LBPH.xml"
         else:
             self.model_path = model_path
 
         self.face_recognizer.read(self.model_path)
         # Specify the path to the custom Haar Cascade classifier
-        if(cascade_path is None):
+        if(cascade_path is None or not(os.path.exists(cascade_path))):
             self.cascade_path = "app/haar_face.xml"
         else:
             self.cascade_path = cascade_path
@@ -79,6 +79,9 @@ class SecuritySystem:
         # Perform face detection
         faces = face_cascade.detectMultiScale(gray_frame, scaleFactor = 1.2, minNeighbors = 5, minSize = (30,30))
         # Iterate through each detected face
+        # Initializing values in case no faces are detected
+        person_name = "Unknown"
+        authorization_status = False
         for face in faces:
             # Extract the detected face region
             x,y,w,h = face
@@ -114,7 +117,7 @@ class SecuritySystem:
             cv2.putText(frame,f"Authorization Status: {authorization_status}",(x+5,y-10),cv2.FONT_HERSHEY_PLAIN,0.8,(0,0,0),1)
             # Log access attempt
             self.log_access_attempt(person_name,is_authorized)
-        return face, frame
+        return person_name, authorization_status , frame
 
     def get_person_name(self, label, confidence):
         # TODO 1
