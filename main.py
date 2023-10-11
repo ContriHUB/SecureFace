@@ -66,7 +66,7 @@ def real_time_detection(security_system):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  
         cv2.imshow('Real-time Face Recognition', frame)
         # Press 'q' to quit
-       if cv2.waitKey(1) & 0xFF == ord("q"):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
           break
 
     # Release the video capture object and close the OpenCV window
