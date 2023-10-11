@@ -52,15 +52,13 @@ def train_face_recognition_model(algorithm='LBPH'):
     # Save the trained model to a .xml file in the app/trained_models folder
     # The name of the file should be according to example presented in docs
 
-    model_filename = f'trained_models/{algorithm}_face_recognition_model.xml'
-    
-    directory = os.path.dirname(model_filename)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    # getting complete path
+    model_filename = os.path.join('..', 'app', 'trained_models', f'trained_face_model_{algorithm}.xml')
+
     face_recognizer.save(model_filename)
 
     # Save label-to-name mapping to a CSV file
-    label_to_name_filename = 'label_to_name_mapping.csv'
+    label_to_name_filename = os.path.join('..', 'app', 'label_to_name.csv')
     with open(label_to_name_filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for label, name in label_to_name.items():
