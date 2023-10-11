@@ -18,7 +18,7 @@ def load_existing_model(algorithm):
     return SecuritySystem(algorithm, model_path)
 
 #new
-#recognizing using LBPG algoq
+#recognizing using LBPG algo
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 #extracting informations
 model_file = 'app/trained_models/trained_face_model_LBPH.xml'  # Update with the appropriate model file
