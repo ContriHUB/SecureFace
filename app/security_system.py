@@ -5,6 +5,8 @@ import logging
 from datetime import datetime
 
 class SecuritySystem:
+    model_path = None
+    cascade_path = None
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
         # Initialize face recognition model based on the specified algorithm
         if algorithm == 'LBPH':
@@ -18,12 +20,13 @@ class SecuritySystem:
 
         # TODO 1
         # Load the trained face recognition model
-        if(model_path==None):
-            self.model_path = "trained_models/trained_face_model_LBPH.xml"
+        if(self.model_path==None):
+            self.model_path = "app/trained_models/trained_face_model_LBPH.xml"
         self.face_recognizer.read(self.model_path)
+        
         # Specify the path to the custom Haar Cascade classifier
-        if(cascade_path==None):
-            self.cascade_path = "haar_face.xml"
+        if(self.cascade_path==None):
+            self.cascade_path = "app/haar_face.xml"
         # Load authorized persons from CSV
         self.authorized_persons = self.load_authorized_persons()
         # Load label-to-name mapping from CSV
@@ -46,7 +49,7 @@ class SecuritySystem:
             # TODO 1
             # Load authorized persons from CSV
             # Your code goes here
-        with open("authorized_persons.csv") as file:
+        with open("app/authorized_persons.csv") as file:
             reader = csv.reader(file)
             for row in reader:
                 authorized_persons[row[0]] = row[1]
@@ -58,7 +61,7 @@ class SecuritySystem:
             # TODO 1
             # Load label-to-name mapping from CSV
             # Your code goes here
-        with open("label_to_name.csv") as file:
+        with open("app/label_to_name.csv") as file:
             reader = csv.reader(file)
             for row in reader:
                 label_to_name[row[0]] = row[1]
