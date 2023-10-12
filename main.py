@@ -2,64 +2,22 @@ import os
 import cv2
 from train_model.train_model import train_face_recognition_model
 from app.security_system import SecuritySystem
-
+sc=SecuritySystem()
 def train_new_model():
     # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher') for training
     selected_algorithm = input("Select the algorithm for training (LBPH/Eigen/Fisher): ").strip()
     train_face_recognition_model(selected_algorithm)
-
-face_classifier = cv2.CascadeClassifier(
-    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-)
 def load_existing_model(algorithm):
     # Load a pre-trained model based on the specified algorithm
     model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
     return SecuritySystem(algorithm, model_path)
-#recognizing using LBPG algo
-face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-#extracting informations
-model_file = 'app/trained_models/trained_face_model_LBPH.xml'  # Update with the appropriate model file
-
-try:
-    face_recognizer.read(model_file)
-except cv2.error as e:
-    print(f"We are  unable to open model file '{model_file}': {e}")
-    exit()
-label_to_name = {}
-label_to_name_file = 'app/label_to_name.csv'  # you should update with the appropriate label-to-name file
-try:
-    with open(label_to_name_file) as f:
-        for line in f:
-            label, name = line.strip().split(',')
-            label_to_name[int(label)] = name
-except IOError:
-    print(f"Unable to open label-to-name file '{label_to_name_file}'")
-    exit()
-    
-def recognize_face_dummy(frame):
-    gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
-    for (x, y, w, h) in faces:
-         label, confidence = face_recognizer.predict(gray_image[y:y+h, x:x+w])
-    
-         if confidence < 50:
-            recognized_label = label_to_name[label]
-         else:
-             recognized_label = "Unknown"
-         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 4)
-
-         cv2.putText(frame, recognized_label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 100, 0), 2)
-    return faces
-
-
 def real_time_detection(security_system):
-    
     capture_vid = cv2.VideoCapture(0)  
     # Now perform face recognition on the frame and while the condition is true , we will capture the image
     while True:
         ret, frame = capture_vid.read()
         # Perform face recognition on the frame
-        recognized_faces = recognize_face_dummy(frame)
+        recognized_faces = sc.recognize_face(security_system,frame)
 
        
         for (x, y, w, h) in recognized_faces:
@@ -69,10 +27,9 @@ def real_time_detection(security_system):
         if cv2.waitKey(1) & 0xFF == ord("q"):
           break
 
-    # Release the video capture object and close the OpenCV window
+    #Release the video capture object and close the OpenCV window
     capture_vid.release()
     cv2.destroyAllWindows()
-
     pass
 
 def batch_processing(security_system):
