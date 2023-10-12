@@ -1,6 +1,9 @@
 import unittest
 import cv2
+import os
+from unittest.mock import mock_open, patch
 from app.security_system import SecuritySystem
+
 
 class TestSecuritySystem(unittest.TestCase):
     def setUp(self):
@@ -11,14 +14,18 @@ class TestSecuritySystem(unittest.TestCase):
         # Ensure access attempts are logged correctly
         person_name = 'Test User'
         is_authorized = True
-
-        # Call the log_access_attempt method
-        self.security_system.log_access_attempt(person_name, is_authorized)
-
-        # Check if the access_logs.log file contains the log entry
-        with open('app/access_logs.log', 'r') as log_file:
-            log_contents = log_file.read()
-            self.assertIn(f'Person: {person_name}, Authorized: {is_authorized}', log_contents)
+        #check whether file exists at correct path
+        log_file_path = 'app/access_logs.log'
+        self.assertTrue(os.path.exists(log_file_path))
+        
+        #Clean up the log file before running the test
+        with open(log_file_path, 'w') as log_file:
+            log_file.write("")
+        
+        with patch('logging.Logger.info') as mocked_logger:
+            self.security_system.log_access_attempt(person_name, is_authorized)
+            
+            mocked_logger.assert_called_with(f'Person: {person_name}, Authorized: {is_authorized}')
 
     def test_face_detection(self):
         # Ensure face detection works correctly
