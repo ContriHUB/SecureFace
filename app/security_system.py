@@ -1,93 +1,78 @@
-import cv2
 import os
-import csv
-import logging
+import cv2
+from train_model.train_model import train_face_recognition_model
+from app.security_system import SecuritySystem
 
-class SecuritySystem:
-    def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
-        # Initialize face recognition model based on the specified algorithm
-        if algorithm == 'LBPH':
-            self.face_recognizer = cv2.face_LBPHFaceRecognizer.create()
-        elif algorithm == 'Eigen':
-            self.face_recognizer = cv2.face_EigenFaceRecognizer.create()
-        elif algorithm == 'Fisher':
-            self.face_recognizer = cv2.face_FisherFaceRecognizer.create()
-        else:
-            raise ValueError("Invalid algorithm specified")
+def train_new_model():
+    # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher') for training
+    selected_algorithm = input("Select the algorithm for training (LBPH/Eigen/Fisher): ").strip()
+    train_face_recognition_model(selected_algorithm)
 
-        # TODO 1
-        # Load the trained face recognition model
+def load_existing_model(algorithm):
+    # Load a pre-trained model based on the specified algorithm
+    model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
+    return SecuritySystem(algorithm, model_path)
 
-        # Specify the path to the custom Haar Cascade classifier
-
-        # Load authorized persons from CSV
-        
-        # Load label-to-name mapping from CSV
-        
-        # TODO 2
-        # Configure logging
-        # Logs are to be made to the access_logs.log file
-        # Set the logging level to INFO
-        # Use the following format: '%(asctime)s - %(message)s'
-        # Your code goes here
-
-    def load_authorized_persons(self):
-        authorized_persons = {}
-        # TODO 1
-        # Load authorized persons from CSV
-        # Your code goes here
-
-        return authorized_persons
+def real_time_detection(security_system):
+    # TODO 1
+    # Capture video from a camera (you can adjust the video source)
     
-    def load_label_to_name(self, algorithm):
-        label_to_name = {}
-        # TODO 1
-        # Load label-to-name mapping from CSV
-        # Your code goes here
+        # Perform face recognition on the frame
 
-        return label_to_name
+        # Press 'q' to quit
 
-    def recognize_face(self, frame):
-        # Convert the frame to grayscale for face detection
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # Release the video capture object and close the window
+    pass
 
-        # Load the custom Haar Cascade classifier for face detection.Earlier:face_cascade = cv2.CascadeClassifier(self.cascade_path)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+def batch_processing(security_system):
+    val_data_dir = 'val_data'
+    predicted_val_data_dir = 'predicted_val_data'
 
-        # TODO 3
-        # Perform face detection
-        # Iterate through each detected face
-        # Extract the detected face region
-        # Perform facial recognition on the detected face
-        # Draw bounding box around the detected face
-        # Annotate the frame with the recognized user's name and authorization status
-        # Log access attempt
-        # Your code goes here
-        return frame
+    # TODO 2
+    # Create the 'predicted_val_data' directory if it doesn't exist
+    # Walk through the 'val_data' directory and perform face recognition on each image
+    # Get the relative path from 'val_data' to the image
+    # Get the directory part (excluding the file name)
+    # Create the corresponding directory structure in 'predicted_val_data'
+    # Create the output path for the processed image
+    # Save the processed image in the corresponding directory
+    pass
 
-    def get_person_name(self, label, confidence):
-        # TODO 1
-        # Return the name of the person based on the label
-        # If the confidence is less than 80, return 'Unknown'
-        # Your code goes here
-        pass
+def main():
+    print("Welcome to the SecureFace Access Control System!")
 
+    while True:
+        print("\nChoose an option:")
+        print("1. Train a new face recognition model")
+        print("2. Load an existing model and run the system")
+        print("3. Exit")
+        choice = input("Enter your choice (1/2/3): ").strip()
 
-    def is_person_authorized(self, person_name):
-        return self.authorized_persons.get(person_name, False)
+        if choice == '1':
+            train_new_model()
+        elif choice == '2':
+            algorithm = input("Enter the algorithm used for training (LBPH/Eigen/Fisher): ").strip()
+            security_system = load_existing_model(algorithm)
 
-    def log_access_attempt(self, person_name, is_authorized):
-        # TODO 2
-        # Log access attempt in the access_logs.log file
-        # Logs should be in the following format:
-        # <timestamp> - Person: <person_name>, Authorized: <is_authorized>
-        # Your code goes here
+            print("\nChoose an option:")
+            print("1. Real-time Detection")
+            print("2. Batch Processing of Validation Data")
+            print("3. Return to Main Menu")
+            sub_choice = input("Enter your choice (1/2/3): ").strip()
 
-        # If unauthorized access, send a notification (you need to implement this)
-        if not is_authorized:
-            self.send_firebase_notification(person_name)
+            if sub_choice == '1':
+                real_time_detection(security_system)
+            elif sub_choice == '2':
+                batch_processing(security_system)
+            elif sub_choice == '3':
+                continue
+            else:
+                print("Invalid choice. Returning to the main menu.")
+        elif choice == '3':
+            print("Exiting the SecureFace Access Control System")
+            break
+        else:
+            print("Invalid choice. Please select a valid option.")
 
-    def send_firebase_notification(self, person_name):
-        # Implement Firebase Cloud Messaging notification
-        # You'll need to set up Firebase and integrate Firebase Cloud Messaging.
-        pass
+if __name__ == '__main__':
+    main()
