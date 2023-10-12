@@ -32,12 +32,37 @@ def train_face_recognition_model(algorithm='LBPH'):
     # Add the person's name to the label-to-name dictionary using the label as the key
     # Your code goes here
 
+    for label, person_name in enumerate(os.listdir(train_data_dir)):
+        label_to_name[label] = person_name
+        person_dir = os.path.join(train_data_dir, person_name)
+
+        for filename in os.listdir(person_dir):
+            if filename.endswith(('.jpg', '.jpeg', '.png', '.bmp')): 
+                image_path = os.path.join(person_dir, filename)
+                image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) 
+                
+                if image is not None:
+                    faces.append(image)
+                    labels.append(label)
+
     # Train the face recognition model
+    face_recognizer.train(np.array(faces, dtype='object'), np.array(labels))
 
     # Save the trained model to a .xml file in the app/trained_models folder
     # The name of the file should be according to example presented in docs
 
+    # getting complete path
+    model_filename = os.path.join('app', 'trained_models', f'trained_face_model_{algorithm}.xml')
+
+    face_recognizer.save(model_filename)
+
     # Save label-to-name mapping to a CSV file
+    label_to_name_filename = os.path.join('app', 'label_to_name.csv')
+    with open(label_to_name_filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for label, name in label_to_name.items():
+            writer.writerow([label, name])
+
 
     # TODO 2
     # Print a summary of the training
