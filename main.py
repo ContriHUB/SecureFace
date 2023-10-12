@@ -2,7 +2,7 @@ import os
 import cv2
 from train_model.train_model import train_face_recognition_model
 from app.security_system import SecuritySystem
-sc=SecuritySystem()
+# sc=SecuritySystem()
 def train_new_model():
     # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher') for training
     selected_algorithm = input("Select the algorithm for training (LBPH/Eigen/Fisher): ").strip()
@@ -17,16 +17,11 @@ def real_time_detection(security_system):
     while True:
         ret, frame = capture_vid.read()
         # Perform face recognition on the frame
-        recognized_faces = sc.recognize_face(security_system,frame)
-
-       
-        for (x, y, w, h) in recognized_faces:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  
+        recognized_faces = SecuritySystem.recognize_face(security_system,frame)
         cv2.imshow('Real-time Face Recognition', frame)
         # Press 'q' to quit
         if cv2.waitKey(1) & 0xFF == ord("q"):
           break
-
     #Release the video capture object and close the OpenCV window
     capture_vid.release()
     cv2.destroyAllWindows()
