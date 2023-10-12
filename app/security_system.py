@@ -20,28 +20,18 @@ class SecuritySystem:
 
         # TODO 1
         # Load the trained face recognition model
-<<<<<<< HEAD
-        if(self.model_path==None):
-            self.model_path = "app/trained_models/trained_face_model_LBPH.xml"
-=======
         if(model_path is None or not(os.path.exists(model_path))):
             self.model_path = "app/trained_models/trained_face_model_LBPH.xml"
         else:
             self.model_path = model_path
 
->>>>>>> 2126f47524961e63d7d027f63a0ea869a7c072e0
         self.face_recognizer.read(self.model_path)
         
         # Specify the path to the custom Haar Cascade classifier
-<<<<<<< HEAD
-        if(self.cascade_path==None):
-            self.cascade_path = "app/haar_face.xml"
-=======
         if(cascade_path is None or not(os.path.exists(cascade_path))):
             self.cascade_path = "app/haar_face.xml"
         else:
             self.cascade_path = cascade_path
->>>>>>> 2126f47524961e63d7d027f63a0ea869a7c072e0
         # Load authorized persons from CSV
         self.authorized_persons = self.load_authorized_persons()
         # Load label-to-name mapping from CSV
