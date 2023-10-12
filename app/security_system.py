@@ -51,8 +51,8 @@ class SecuritySystem:
         # Convert the frame to grayscale for face detection
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # Load the custom Haar Cascade classifier for face detection
-        face_cascade = cv2.CascadeClassifier(self.cascade_path)
+        # Load the custom Haar Cascade classifier for face detection.Earlier:face_cascade = cv2.CascadeClassifier(self.cascade_path)
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
         # TODO 3
         # Perform face detection
