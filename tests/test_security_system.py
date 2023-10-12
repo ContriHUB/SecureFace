@@ -39,10 +39,11 @@ class TestSecuritySystem(unittest.TestCase):
         # Check if faces were detected in the processed image
         self.assertTrue(len(processed_image) > 0)
         
-        self.assertTrue(np.mean(processed_image) > 0)  # Check if the image is not entirely black
+        # Check if the image is not entirely black
+        self.assertTrue(np.mean(processed_image) > 0)  
         
         face_cascade = cv2.CascadeClassifier(self.security_system.cascade_path)
-        gray_image = cv2.cvtColor(processed_image, cv2.COLOR_BGR2GRAY)
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30))
         
         #Check for Detected Faces Being Non-Overlapping
