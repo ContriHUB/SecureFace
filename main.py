@@ -15,13 +15,19 @@ def load_existing_model(algorithm):
 
 def real_time_detection(security_system):
     # TODO 1
-    # Capture video from a camera (you can adjust the video source)
-    
+    capture_vid = cv2.VideoCapture(0)  
+    # Now perform face recognition on the frame and while the condition is true , we will capture the image
+    while True:
+        ret, frame = capture_vid.read()
         # Perform face recognition on the frame
-
+        recognized_faces = SecuritySystem.recognize_face(security_system,frame)
+        cv2.imshow('Real-time Face Recognition', frame)
         # Press 'q' to quit
-
-    # Release the video capture object and close the window
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+          break
+    #Release the video capture object and close the OpenCV window
+    capture_vid.release()
+    cv2.destroyAllWindows()
     pass
 
 def batch_processing(security_system):
