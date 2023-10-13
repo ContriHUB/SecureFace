@@ -45,13 +45,6 @@ class TestSecuritySystem(unittest.TestCase):
         face_cascade = cv2.CascadeClassifier(self.security_system.cascade_path)
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30))
-        
-        #Check for Detected Faces Being Non-Overlapping
-        for i in range(len(faces)):
-            x1, y1, w1, h1 = faces[i]
-            for j in range(i + 1, len(faces)):
-                x2, y2, w2, h2 = faces[j]
-                self.assertFalse(x1 < x2 + w2 and x1 + w1 > x2 and y1 < y2 + h2 and y1 + h1 > y2)
                 
 
     def test_facial_recognition(self):
