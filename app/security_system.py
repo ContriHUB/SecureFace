@@ -72,8 +72,11 @@ class SecuritySystem:
         return label_to_name
 
     def recognize_face(self, frame):
+        #Resizing image to maintain a standard size
+        height,width,channels = frame.shape
+        ratio = (int)(640/width)
+        frame = cv2.resize(frame,(ratio*width,ratio*height))
         # Convert the frame to grayscale for face detection
-        frame = cv2.resize(frame,(640,480))
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Load the custom Haar Cascade classifier for face detection
