@@ -5,6 +5,8 @@ import logging
 from datetime import datetime
 
 class SecuritySystem:
+    model_path = None
+    cascade_path = None
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
         # Initialize face recognition model based on the specified algorithm
         if algorithm == 'LBPH':
@@ -24,6 +26,7 @@ class SecuritySystem:
             self.model_path = model_path
 
         self.face_recognizer.read(self.model_path)
+        
         # Specify the path to the custom Haar Cascade classifier
         if(cascade_path is None or not(os.path.exists(cascade_path))):
             self.cascade_path = "app/haar_face.xml"
