@@ -65,7 +65,6 @@ def train_face_recognition_model(algorithm='LBPH'):
         for label, person_name in label_to_name.items():
             writer.writerow([label, person_name])
 
-
     # TODO 2
     # Print a summary of the training
     # Summary could include number of users trained, number of images per user,etc.
@@ -81,7 +80,6 @@ def train_face_recognition_model(algorithm='LBPH'):
     table = tabulate(data,headers,tablefmt = "pretty")
     print(table)
     
-
 if __name__ == '__main__':
     # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher')
     selected_algorithm = 'LBPH'
