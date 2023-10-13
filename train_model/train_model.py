@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 import csv
+from tabulate import tabulate
 
 # Define the paths to the training dataset
 train_data_dir = 'train_model/train_data'
@@ -22,7 +23,7 @@ def train_face_recognition_model(algorithm='LBPH'):
 
     # Create a dictionary to map label (numeric) to person's name
     label_to_name = {}
-
+    label_count = {}
     # TODO 1
     # Load training data
     # Walk through each sub-folder
@@ -44,6 +45,7 @@ def train_face_recognition_model(algorithm='LBPH'):
                 if image is not None:
                     faces.append(image)
                     labels.append(label)
+                    label_count[label] = label_count.get(label,0)+1
 
     # Train the face recognition model
     face_recognizer.train(np.array(faces, dtype='object'), np.array(labels))
@@ -60,15 +62,24 @@ def train_face_recognition_model(algorithm='LBPH'):
     label_to_name_filename = os.path.join('app', 'label_to_name.csv')
     with open(label_to_name_filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        for label, name in label_to_name.items():
-            writer.writerow([label, name])
-
+        for label, person_name in label_to_name.items():
+            writer.writerow([label, person_name])
 
     # TODO 2
     # Print a summary of the training
-    # Summary could include number of users trained, number of images per user, etc.
-    print(f'Training complete. Number of users trained: {len(set(labels))}')
+    # Summary could include number of users trained, number of images per user,etc.
 
+    print("Success! Training Completed.")
+    print(f'Number of users trained: {len(set(labels))}')
+    headers = ["Label","Name","Number of Images Trained"]
+    data = [];
+    for label, count in label_count.items():
+        person_name = label_to_name[label]
+        row = [label,person_name,count];
+        data.append(row)
+    table = tabulate(data,headers,tablefmt = "pretty")
+    print(table)
+    
 if __name__ == '__main__':
     # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher')
     selected_algorithm = 'LBPH'
