@@ -45,7 +45,7 @@ def train_face_recognition_model(algorithm='LBPH'):
                 if image is not None:
                     faces.append(image)
                     labels.append(label)
-                    label_count[label] = label_count.get(label,1)
+                    label_count[label] = label_count.get(label,0)+1
 
     # Train the face recognition model
     face_recognizer.train(np.array(faces, dtype='object'), np.array(labels))
