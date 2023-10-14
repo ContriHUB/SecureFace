@@ -5,7 +5,7 @@ import numpy as np
 from unittest.mock import mock_open, patch
 import sys
 import os
-sys.path.insert(1,"..\\SecureFace-Branch")
+sys.path.insert(1,"..\\SecureFace")
 from app.security_system import SecuritySystem
 
 
@@ -33,7 +33,7 @@ class TestSecuritySystem(unittest.TestCase):
 
     def test_face_detection(self):
         # Ensure face detection works correctly
-        image_path = 'tests/test_images/face.jpg'
+        image_path = 'tests/test_images/Unknown_1.png'
         image = cv2.imread(image_path)
 
         # Call the recognize_face method
@@ -61,7 +61,7 @@ class TestSecuritySystem(unittest.TestCase):
         # Checking accuracy on each image to calculate net accuracy
         prediction_accuracy = 0
         for file in files:
-            person_name_ground_truth = file[:-6]
+            person_name_ground_truth = file.split(sep="_")[0]
             auth_status_ground_truth = self.security_system.is_person_authorized(person_name_ground_truth)
             image_path = os.path.join(image_directory,file)
             image = cv2.imread(image_path)
