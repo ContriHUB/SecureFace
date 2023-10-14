@@ -24,20 +24,16 @@ def train_face_recognition_model(algorithm='LBPH'):
     # Create a dictionary to map label (numeric) to person's name
     label_to_name = {}
     label_count = {}
-    # TODO 1
+    
+    
     # Load training data
-    # Walk through each sub-folder
-    # Assume each sub-folder is a different person
-    # Append each image to the training set
-    # Append the corresponding label to the labels list
-    # Add the person's name to the label-to-name dictionary using the label as the key
-    # Your code goes here
-
     for label, person_name in enumerate(os.listdir(train_data_dir)):
         label_to_name[label] = person_name
+        # Get directory path using person's name
         person_dir = os.path.join(train_data_dir, person_name)
 
         for filename in os.listdir(person_dir):
+            # Check for images in the file and append them together
             if filename.endswith(('.jpg', '.jpeg', '.png', '.bmp')): 
                 image_path = os.path.join(person_dir, filename)
                 image = cv2.imread(image_path)
@@ -53,9 +49,8 @@ def train_face_recognition_model(algorithm='LBPH'):
     face_recognizer.train(np.array(faces), np.array(labels))
 
     # Save the trained model to a .xml file in the app/trained_models folder
-    # The name of the file should be according to example presented in docs
 
-    # getting complete path
+    # Getting complete path
     model_filename = os.path.join('app', 'trained_models', f'trained_face_model_{algorithm}.xml')
 
     face_recognizer.save(model_filename)
@@ -67,11 +62,10 @@ def train_face_recognition_model(algorithm='LBPH'):
         for label, person_name in label_to_name.items():
             writer.writerow([label, person_name])
 
-    # TODO 2
     # Print a summary of the training
-    # Summary could include number of users trained, number of images per user,etc.
-
-    print("Success! Training Completed.")
+    
+    print("Success! Training Completed.\n")
+    print(f"Algorithm Used:{algorithm}")
     print(f'Number of users trained: {len(set(labels))}')
     headers = ["Label","Name","Number of Images Trained"]
     data = [];
