@@ -15,13 +15,17 @@ def load_existing_model(algorithm):
 
 def real_time_detection(security_system):
     # TODO 1
-    capture_vid = cv2.VideoCapture(0)  
+    capture_vid = cv2.VideoCapture(0)
+    # Ensures images by all cameras follow a standard template
+    capture_vid.set(3,640)
+    capture_vid.set(4,480)
+    capture_vid.set(10,100)
     # Now perform face recognition on the frame and while the condition is true, we will capture the image
     while True:
         ret, frame = capture_vid.read()
         # Perform face recognition on the frame
-        recognized_faces = security_system.recognize_face(frame)
-        cv2.imshow('Real-time Face Recognition', frame)
+        person_name, auth_status, recognized_faces = security_system.recognize_face(frame)
+        cv2.imshow('Real-time Face Recognition', recognized_faces)
         # Press 'q' to quit
         if cv2.waitKey(1) & 0xFF == ord("q"):
           break
