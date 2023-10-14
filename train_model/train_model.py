@@ -40,15 +40,17 @@ def train_face_recognition_model(algorithm='LBPH'):
         for filename in os.listdir(person_dir):
             if filename.endswith(('.jpg', '.jpeg', '.png', '.bmp')): 
                 image_path = os.path.join(person_dir, filename)
-                image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) 
-                
+                image = cv2.imread(image_path)
                 if image is not None:
+                    # Resizing image as Fisher and Eigen require images of equal size
+                    image = cv2.resize(image,(640,480))
+                    image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
                     faces.append(image)
                     labels.append(label)
                     label_count[label] = label_count.get(label,0)+1
 
     # Train the face recognition model
-    face_recognizer.train(np.array(faces, dtype='object'), np.array(labels))
+    face_recognizer.train(np.array(faces), np.array(labels))
 
     # Save the trained model to a .xml file in the app/trained_models folder
     # The name of the file should be according to example presented in docs
