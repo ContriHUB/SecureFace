@@ -9,11 +9,12 @@ class SecuritySystem:
     cascade_path = None
     def __init__(self, algorithm='LBPH', model_path=None, cascade_path=None):
         # Initialize face recognition model based on the specified algorithm
-        if algorithm == 'LBPH':
+        self.algorithm = algorithm
+        if self.algorithm == 'LBPH':
             self.face_recognizer = cv2.face_LBPHFaceRecognizer.create()
-        elif algorithm == 'Eigen':
+        elif self.algorithm == 'Eigen':
             self.face_recognizer = cv2.face_EigenFaceRecognizer.create()
-        elif algorithm == 'Fisher':
+        elif self.algorithm == 'Fisher':
             self.face_recognizer = cv2.face_FisherFaceRecognizer.create()
         else:
             raise ValueError("Invalid algorithm specified")
@@ -72,7 +73,7 @@ class SecuritySystem:
         return label_to_name
 
     def recognize_face(self, frame):
-        #Resizing image to maintain a standard size
+        #Resizing image to maintain a standard size in LBPH
         height,width,channels = frame.shape
         ratio = (int)(640/width)
         frame = cv2.resize(frame,(ratio*width,ratio*height))
@@ -94,6 +95,9 @@ class SecuritySystem:
             x,y,w,h = face
             X,Y = x+w,y+h
             image = gray_frame[y:Y, x:X]
+            if(self.algorithm != 'LBPH'):
+                # Resizing face images to equal size for Eigen and Fisher
+                image = cv2.resize(image,(640,480))
             # Perform facial recognition on the detected face
             label, confidence = self.face_recognizer.predict(image)
             person_name = self.get_person_name(label,confidence)
