@@ -36,15 +36,12 @@ class SecuritySystem:
             self.cascade_path = cascade_path
             
         # Load authorized persons from CSV
-        
         self.authorized_persons = self.load_authorized_persons()
         
         # Load label-to-name mapping from CSV
-        
         self.label_to_name = self.load_label_to_name(algorithm)
         
         # Configure logging
-        
         logging.basicConfig(
             filename='app/access_logs.log',
             level=logging.INFO,

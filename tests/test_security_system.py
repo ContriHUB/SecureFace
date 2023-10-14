@@ -27,7 +27,7 @@ class TestSecuritySystem(unittest.TestCase):
         
         with patch('logging.Logger.info') as mocked_logger:
             self.security_system.log_access_attempt(person_name, is_authorized)
-            # validate the log format
+            # Validate the log format
             mocked_logger.assert_called_with(f'Person: {person_name}, Authorized: {is_authorized}')
 
     def test_face_detection(self):

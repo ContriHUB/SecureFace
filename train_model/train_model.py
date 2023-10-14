@@ -50,7 +50,7 @@ def train_face_recognition_model(algorithm='LBPH'):
 
     # Save the trained model to a .xml file in the app/trained_models folder
 
-    # Getting complete path
+    # Get complete model path
     model_filename = os.path.join('app', 'trained_models', f'trained_face_model_{algorithm}.xml')
 
     face_recognizer.save(model_filename)

@@ -11,17 +11,18 @@ def train_new_model():
 def load_existing_model(algorithm):
     
     # Load a pre-trained model based on the specified algorithm
-    
     model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
     return SecuritySystem(algorithm, model_path)
 
 def real_time_detection(security_system):
     
     capture_vid = cv2.VideoCapture(0)
+    
     # Ensures images by all cameras follow a standard template
     capture_vid.set(3,640)
     capture_vid.set(4,480)
     capture_vid.set(10,100)
+    
     # Perform Face Recognition
     while True:
         ret, frame = capture_vid.read()
