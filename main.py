@@ -4,23 +4,25 @@ from train_model.train_model import train_face_recognition_model
 from app.security_system import SecuritySystem
 
 def train_new_model():
-    # Specify the algorithm ('LBPH', 'Eigen', or 'Fisher') for training
+    
     selected_algorithm = input("Select the algorithm for training (LBPH/Eigen/Fisher): ").strip()
     train_face_recognition_model(selected_algorithm)
 
 def load_existing_model(algorithm):
+    
     # Load a pre-trained model based on the specified algorithm
+    
     model_path = f'app/trained_models/trained_face_model_{algorithm}.xml'
     return SecuritySystem(algorithm, model_path)
 
 def real_time_detection(security_system):
-    # TODO 1
+    
     capture_vid = cv2.VideoCapture(0)
     # Ensures images by all cameras follow a standard template
     capture_vid.set(3,640)
     capture_vid.set(4,480)
     capture_vid.set(10,100)
-    # Now perform face recognition on the frame and while the condition is true, we will capture the image
+    # Perform Face Recognition
     while True:
         ret, frame = capture_vid.read()
         # Perform face recognition on the frame
@@ -29,7 +31,6 @@ def real_time_detection(security_system):
         # Press 'q' to quit
         if cv2.waitKey(1) & 0xFF == ord("q"):
           break
-    #Release the video capture object and close the OpenCV window
     capture_vid.release()
     cv2.destroyAllWindows()
     pass
@@ -38,18 +39,10 @@ def batch_processing(security_system):
     val_data_dir = 'val_data'
     predicted_val_data_dir = 'predicted_val_data'
 
-    # TODO 2
-    # Create the 'predicted_val_data' directory if it doesn't exist
-    
     if(not(os.path.exists(predicted_val_data_dir) and os.path.isdir(predicted_val_data_dir))):
         os.makedirs(predicted_val_data_dir)
         
-    # Walk through the 'val_data' directory and perform face recognition on each image
-    # Get the relative path from 'val_data' to the image
-    # Get the directory part (excluding the file name)
-    # Create the corresponding directory structure in 'predicted_val_data'
-    # Create the output path for the processed image
-    # Save the processed image in the corresponding directory
+    # Mirror the validation database structure and insert predicted image as outputs
     
     for directory in os.listdir(val_data_dir):
         dir_path = os.path.join(val_data_dir,directory)
