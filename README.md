@@ -59,9 +59,9 @@ SecureFace
 │   ├── haar_face.xml
 │   └── test_security_system.py
 │   └── test_images
-│       ├── Unknown_1.png
-│       ├── Unknown_2.png
-│       └── Unknown_3.png
+│       ├── 1.png
+│       ├── ...
+│       └── n.png
 ├── train_model
 │   ├── train_data
 │   │   ├── Ben Afflek
