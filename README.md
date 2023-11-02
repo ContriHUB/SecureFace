@@ -35,7 +35,8 @@ SecureFace
 │   ├── label_to_name.csv
 │   ├── security_system.py
 │   └── trained_models
-│       ├── trained_face_model.yml
+│       ├── trained_face_model_Eigen.xml
+│       ├── trained_face_model_Fisher.xml
 │       └── trained_face_model_LBPH.xml
 ├── docs
 │   ├── project_description.md
@@ -55,7 +56,12 @@ SecureFace
 │   │   └── n.jpg
 ├── requirements.txt
 ├── tests
+│   ├── haar_face.xml
 │   └── test_security_system.py
+│   └── test_images
+│       ├── 1.png
+│       ├── ...
+│       └── n.png
 ├── train_model
 │   ├── train_data
 │   │   ├── Ben Afflek
@@ -148,3 +154,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 - [Contributor Names]
+- [Sahil Dutta] (https://github.com/Aqua-16)
